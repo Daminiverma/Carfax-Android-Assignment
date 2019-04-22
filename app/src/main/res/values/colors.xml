@@ -3,8 +3,12 @@
     <color name="colorPrimary">#3777BC</color>
     <color name="colorPrimaryDark">#2C5F96</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="lightGray">#AFAFAF</color>
+    <color name="lightGray">#969696</color>
     <color name="darkGray">#707070</color>
+    <color name="saperator_gray">#DBDBDB</color>
     <color name="background">#F5F5F5</color>
+
+    <color name="black_overlay">#66000000</color>
 </resources>

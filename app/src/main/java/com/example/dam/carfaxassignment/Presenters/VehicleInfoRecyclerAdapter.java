@@ -33,7 +33,7 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull VehicleInfoRecyclerViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final VehicleInfoRecyclerViewHolder holder, final int position) {
         VehicleInfoModel vehicleInfo = vehicleInfoList.get(position);
         String yearMakeModelTrim = vehicleInfo.getYear() + " " + vehicleInfo.getMake() + " " + vehicleInfo.getModel() + " " + vehicleInfo.getTrim();
         holder.vehicleInfoYearMakeModelTrim.setText(yearMakeModelTrim);
@@ -43,7 +43,8 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
         holder.vehicleInfoCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(context,)
+                Intent intent = new Intent(context,DetailsActivity.class);
+                context.startActivity(intent);
                 Toast.makeText(context, "Cklicked " + position, Toast.LENGTH_SHORT).show();
             }
         });

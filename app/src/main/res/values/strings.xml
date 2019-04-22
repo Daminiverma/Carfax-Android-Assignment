@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">CARFAX</string>
+
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="image_content_description">No Preview Available</string>
+
+
+    <string name="vehicle_info">Vehicle Info</string>
+    <string name="location">Location</string>
+    <string name="exterior">Exterior Color</string>
+    <string name="interior">Interior Color</string>
+    <string name="drive_type">Drive Type</string>
+    <string name="transmission">Transmission</string>
+    <string name="body_style">Body Style</string>
+    <string name="engine">Engine</string>
+    <string name="fuel">Fuel</string>
 </resources>
