@@ -4,17 +4,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-
-import com.example.dam.carfaxassignment.Models.VehicleInfoModel;
+import com.example.dam.carfaxassignment.Models.VehicleListing;
+import com.example.dam.carfaxassignment.Models.VehicleResponse;
 import com.example.dam.carfaxassignment.R;
-
+import com.example.dam.carfaxassignment.Services.RetrofitClient;
+import com.example.dam.carfaxassignment.Services.VehicleService;
 import java.util.ArrayList;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
     RecyclerView vehicleInfoRecyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
+    ArrayList<VehicleListing> vehicleListing = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,13 +31,23 @@ public class HomeActivity extends AppCompatActivity {
         vehicleInfoRecyclerView.setLayoutManager(layoutManager);
         vehicleInfoRecyclerView.setHasFixedSize(true);
 
-        ArrayList<VehicleInfoModel> vehicleInfoList = new ArrayList<>();
-        for(int i=1; i<=25; i++) {
-            vehicleInfoList.add(new VehicleInfoModel("",2000 + i, "Volkswagon", "model " + i,"trim ss de nno ooy uu info"+i,""+i*100,"location"+i,255.555 * i ));
-        }
+        VehicleService vehicleService = RetrofitClient.getClient().create(VehicleService.class);
+        vehicleService.getVehicleDetails().enqueue(new Callback<VehicleResponse>() {
+            @Override
+            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
+                vehicleListing = response.body().getVehicleListings();
 
-        adapter = new VehicleInfoRecyclerAdapter(vehicleInfoList, this);
-        vehicleInfoRecyclerView.setAdapter(adapter);
+                adapter = new VehicleInfoRecyclerAdapter(vehicleListing, HomeActivity.this);
+                vehicleInfoRecyclerView.setAdapter(adapter);
+            }
+
+            @Override
+            public void onFailure(Call<VehicleResponse> call, Throwable t) {
+
+            }
+        });
+
+
 
     }
 }

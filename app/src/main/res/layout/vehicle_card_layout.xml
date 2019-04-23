@@ -42,7 +42,6 @@
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="@dimen/font_size_large"
-                android:lines="2"
                 android:text="2011 BMW 3 Series 328i"/>
 
             <LinearLayout
