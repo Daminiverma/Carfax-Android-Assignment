@@ -117,9 +117,7 @@ public class VehicleListing {
         this.trim = trim;
     }
 
-    public Integer getMilage() {
-        return mileage;
-    }
+    public Integer getMilage() { return mileage; }
 
     public void setMileage(Integer mileage) {
         this.mileage = mileage;

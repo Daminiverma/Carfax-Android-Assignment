@@ -1,25 +1,25 @@
 package com.example.dam.carfaxassignment.Presenters;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleListingVMComponent;
+import com.example.dam.carfaxassignment.Interfaces.VehicleListingVMComponent;
 import com.example.dam.carfaxassignment.Models.VehicleListing;
-import com.example.dam.carfaxassignment.Models.VehicleResponse;
 import com.example.dam.carfaxassignment.R;
-import com.example.dam.carfaxassignment.Services.RetrofitClient;
-import com.example.dam.carfaxassignment.Services.VehicleService;
+import com.example.dam.carfaxassignment.ViewModels.VehicleListingViewModel;
 import java.util.ArrayList;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
 
     RecyclerView vehicleInfoRecyclerView;
     RecyclerView.LayoutManager layoutManager;
     RecyclerView.Adapter adapter;
-    ArrayList<VehicleListing> vehicleListing = new ArrayList<>();
+    VehicleListingViewModel vehicleListingViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,23 +31,16 @@ public class HomeActivity extends AppCompatActivity {
         vehicleInfoRecyclerView.setLayoutManager(layoutManager);
         vehicleInfoRecyclerView.setHasFixedSize(true);
 
-        VehicleService vehicleService = RetrofitClient.getClient().create(VehicleService.class);
-        vehicleService.getVehicleDetails().enqueue(new Callback<VehicleResponse>() {
-            @Override
-            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
-                vehicleListing = response.body().getVehicleListings();
+        VehicleListingVMComponent vehicleListingVMComponent = DaggerVehicleListingVMComponent.create();
+        vehicleListingViewModel = vehicleListingVMComponent.getVehicleListingViewModel();
 
+        vehicleListingViewModel.getVehicleListings().observe(this, new Observer<ArrayList<VehicleListing>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<VehicleListing> vehicleListing) {
                 adapter = new VehicleInfoRecyclerAdapter(vehicleListing, HomeActivity.this);
+                adapter.notifyDataSetChanged();
                 vehicleInfoRecyclerView.setAdapter(adapter);
             }
-
-            @Override
-            public void onFailure(Call<VehicleResponse> call, Throwable t) {
-
-            }
         });
-
-
-
     }
 }
