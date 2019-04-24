@@ -1,12 +1,19 @@
 package com.example.dam.carfaxassignment.Presenters;
 
+import android.Manifest;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleListingVMComponent;
 import com.example.dam.carfaxassignment.Interfaces.VehicleListingVMComponent;
 import com.example.dam.carfaxassignment.Models.VehicleListing;
@@ -21,6 +28,7 @@ public class DetailsActivity extends AppCompatActivity {
     TextView driveTypeTextView, transmissionTextView, bodyStyleTextView, engineTextView, fuelTextView;
     Button callDealerButton;
     int position = 0;
+    static final Integer CALL = 0x2;
     VehicleListingViewModel vehicleListingViewModel;
 
     @Override
@@ -35,9 +43,15 @@ public class DetailsActivity extends AppCompatActivity {
         VehicleListingVMComponent vehicleListingVMComponent = DaggerVehicleListingVMComponent.create();
         vehicleListingViewModel = vehicleListingVMComponent.getVehicleListingViewModel();
 
-        VehicleListing vehicleListing = vehicleListingViewModel.getVehicleListingAtPosition(position);
+        final VehicleListing vehicleListing = vehicleListingViewModel.getVehicleListingAtPosition(position);
         if (vehicleListing != null) {
             updateViews(vehicleListing);
+            callDealerButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    InitiateCall(vehicleListing.getVehicleDealer().getPhone());
+                }
+            });
         } else {
             showAlertAndExit();
         }
@@ -94,5 +108,20 @@ public class DetailsActivity extends AppCompatActivity {
         bodyStyleTextView.setText(vehicleListing.getBodytype());
         engineTextView.setText(vehicleListing.getEngine());
         fuelTextView.setText(vehicleListing.getFuel());
+    }
+
+    public void InitiateCall(String phoneNumber) {
+        if (ActivityCompat.checkSelfPermission(DetailsActivity.this, Manifest.permission.CALL_PHONE)
+                != PackageManager.PERMISSION_GRANTED) {
+            //Permission Not granted Request Permission
+            ActivityCompat.requestPermissions(DetailsActivity.this, new String[]{Manifest.permission.CALL_PHONE}, CALL);
+        } else {
+            // Permission has already been granted
+            Intent callIntent = new Intent(Intent.ACTION_CALL);
+            callIntent.setData(Uri.parse("tel:" + phoneNumber));
+            if (callIntent.resolveActivity(this.getPackageManager()) != null) {
+                this.startActivity(callIntent);
+            }
+        }
     }
 }

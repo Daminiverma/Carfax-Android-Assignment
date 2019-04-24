@@ -7,12 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
-
 import com.example.dam.carfaxassignment.Models.VehicleListing;
 import com.example.dam.carfaxassignment.R;
 import com.squareup.picasso.Picasso;
-
 import java.util.ArrayList;
 
 public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfoRecyclerViewHolder> {
@@ -35,7 +32,7 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
 
     @Override
     public void onBindViewHolder(@NonNull final VehicleInfoRecyclerViewHolder holder, final int position) {
-        VehicleListing vehicleInfoList = vehicleListings.get(position);
+        final VehicleListing vehicleInfoList = vehicleListings.get(position);
 
         updateViews(holder, vehicleInfoList);
 
@@ -45,6 +42,14 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
                 Intent intent = new Intent(context, DetailsActivity.class);
                 intent.putExtra("position", position);
                 context.startActivity(intent);
+            }
+        });
+
+        holder.vehicleInfoCallDealerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String number = vehicleInfoList.getVehicleDealer().getPhone();
+                ((HomeActivity)context).InitiateCall(number);
             }
         });
     }

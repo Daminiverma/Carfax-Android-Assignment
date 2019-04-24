@@ -17,6 +17,9 @@ import javax.inject.Singleton;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 @Singleton
 public class VehicleRepository {
@@ -30,17 +33,23 @@ public class VehicleRepository {
         final LiveData<ArrayList<VehicleListing>> vehicleListings = new MutableLiveData<>();
 
         VehicleService vehicleService = RetrofitClient.getClient().create(VehicleService.class);
-        vehicleService.getVehicleDetails().enqueue(new Callback<VehicleResponse>() {
-            @Override
-            public void onResponse(Call<VehicleResponse> call, Response<VehicleResponse> response) {
-                ((MutableLiveData<ArrayList<VehicleListing>>) vehicleListings).setValue(response.body().getVehicleListings());
-            }
+        vehicleService.getVehicleDetails().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<VehicleResponse>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.d("01","Response Successfully Completed");
+                    }
 
-            @Override
-            public void onFailure(Call<VehicleResponse> call, Throwable t) {
-                Log.d("Error", t.getMessage());
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("02",e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(VehicleResponse vehicleResponse) {
+                        ((MutableLiveData<ArrayList<VehicleListing>>) vehicleListings).setValue(vehicleResponse.getVehicleListings());
+                    }
+                });
         return vehicleListings;
     }
 }

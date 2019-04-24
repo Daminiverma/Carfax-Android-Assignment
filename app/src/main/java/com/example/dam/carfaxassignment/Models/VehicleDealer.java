@@ -21,7 +21,7 @@ public class VehicleDealer {
     @Expose
     private String zip;
 
-    @SerializedName(" phone ")
+    @SerializedName("phone")
     @Expose
     private String phone;
 
