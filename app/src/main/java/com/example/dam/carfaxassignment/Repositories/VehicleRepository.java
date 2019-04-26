@@ -72,7 +72,6 @@ public class VehicleRepository {
                     public void onError(Throwable e) {
                         if (e.getMessage().contains("Unable to resolve host")) {
                             Log.d("404", "Internet not available");
-                            return;
                             //Internet Connection is not available.
                         } else {
                             //Unknown error occured.
