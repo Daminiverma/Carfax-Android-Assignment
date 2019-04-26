@@ -1,5 +1,7 @@
 package com.example.dam.carfaxassignment.Models;
 
+import android.arch.persistence.room.Embedded;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,14 +9,14 @@ public class VehicleImage {
 
     @SerializedName("firstPhoto")
     @Expose
+    @Embedded
     private VehicleFirstPhoto vehicleFirstPhoto;
 
-    public VehicleFirstPhoto getFirstPhoto() {
+    public VehicleFirstPhoto getVehicleFirstPhoto() {
         return vehicleFirstPhoto;
     }
 
-    public void setFirstPhoto(VehicleFirstPhoto firstPhoto) {
-        this.vehicleFirstPhoto = firstPhoto;
+    public void setVehicleFirstPhoto(VehicleFirstPhoto vehicleFirstPhoto) {
+        this.vehicleFirstPhoto = vehicleFirstPhoto;
     }
-
 }

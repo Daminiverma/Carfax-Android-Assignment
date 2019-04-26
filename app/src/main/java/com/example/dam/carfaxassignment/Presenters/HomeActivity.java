@@ -16,13 +16,16 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleListingVMComponent;
-import com.example.dam.carfaxassignment.Interfaces.VehicleListingVMComponent;
+import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleComponent;
+import com.example.dam.carfaxassignment.Interfaces.VehicleComponent;
 import com.example.dam.carfaxassignment.Models.VehicleListing;
+import com.example.dam.carfaxassignment.Modules.VehicleModule;
 import com.example.dam.carfaxassignment.R;
 import com.example.dam.carfaxassignment.ViewModels.VehicleListingViewModel;
 
-import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -37,21 +40,20 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        if(!isNetworkAvailable()){
-            showAlertAndExit();
-        }
-
         vehicleInfoRecyclerView = (RecyclerView) findViewById(R.id.vehicle_info_recycler_view);
         layoutManager = new LinearLayoutManager(this);
         vehicleInfoRecyclerView.setLayoutManager(layoutManager);
         vehicleInfoRecyclerView.setHasFixedSize(true);
 
-        VehicleListingVMComponent vehicleListingVMComponent = DaggerVehicleListingVMComponent.create();
-        vehicleListingViewModel = vehicleListingVMComponent.getVehicleListingViewModel();
+        ButterKnife.bind(this);
+        MyApp.app().vehicleComponent().inject(this);
 
-        vehicleListingViewModel.getVehicleListings().observe(this, new Observer<ArrayList<VehicleListing>>() {
+        VehicleComponent vehicleComponent = DaggerVehicleComponent.builder().vehicleModule(new VehicleModule(this)).build();
+        vehicleListingViewModel = vehicleComponent.getVehicleListingViewModel();
+
+        vehicleListingViewModel.getVehicleListings().observe(this, new Observer<List<VehicleListing>>() {
             @Override
-            public void onChanged(@Nullable ArrayList<VehicleListing> vehicleListing) {
+            public void onChanged(@Nullable List<VehicleListing> vehicleListing) {
                 adapter = new VehicleInfoRecyclerAdapter(vehicleListing, HomeActivity.this);
                 adapter.notifyDataSetChanged();
                 vehicleInfoRecyclerView.setAdapter(adapter);

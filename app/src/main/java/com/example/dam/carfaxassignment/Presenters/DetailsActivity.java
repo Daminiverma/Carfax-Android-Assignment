@@ -14,9 +14,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleListingVMComponent;
-import com.example.dam.carfaxassignment.Interfaces.VehicleListingVMComponent;
+import com.example.dam.carfaxassignment.Interfaces.DaggerVehicleComponent;
+import com.example.dam.carfaxassignment.Interfaces.VehicleComponent;
 import com.example.dam.carfaxassignment.Models.VehicleListing;
+import com.example.dam.carfaxassignment.Modules.VehicleModule;
 import com.example.dam.carfaxassignment.R;
 import com.example.dam.carfaxassignment.ViewModels.VehicleListingViewModel;
 import com.squareup.picasso.Picasso;
@@ -40,8 +41,8 @@ public class DetailsActivity extends AppCompatActivity {
 
         position = getIntent().getExtras().getInt("position");
 
-        VehicleListingVMComponent vehicleListingVMComponent = DaggerVehicleListingVMComponent.create();
-        vehicleListingViewModel = vehicleListingVMComponent.getVehicleListingViewModel();
+        VehicleComponent vehicleComponent = DaggerVehicleComponent.builder().vehicleModule(new VehicleModule(this)).build();
+        vehicleListingViewModel = vehicleComponent.getVehicleListingViewModel();
 
         final VehicleListing vehicleListing = vehicleListingViewModel.getVehicleListingAtPosition(position);
         if (vehicleListing != null) {
@@ -90,7 +91,7 @@ public class DetailsActivity extends AppCompatActivity {
     private void updateViews(VehicleListing vehicleListing) {
         String imageUrl = "https://www.carfax.com/uclassets/images/vdp-noimage.png";
         if (vehicleListing.getImages() != null) {
-            imageUrl = vehicleListing.getImages().getFirstPhoto().getLarge();
+            imageUrl = vehicleListing.getImages().getVehicleFirstPhoto().getLarge();
         }
         Picasso.get().load(imageUrl).into(vehicleDetailImageView);
 
@@ -98,7 +99,7 @@ public class DetailsActivity extends AppCompatActivity {
                 vehicleListing.getModel() + " " + ((vehicleListing.getTrim().equals("Unspecified")) ? "" : vehicleListing.getTrim());
         yearMakeModelTrimTextView.setText(yearMakeModelTrim);
         priceTextView.setText("$ " + vehicleListing.getCurrentPrice().toString());
-        milageTextView.setText(vehicleListing.getMilage().toString() + " mi");
+        milageTextView.setText(vehicleListing.getMileage().toString() + " mi");
         locationTextView.setText(vehicleListing.getVehicleDealer().getCity() +
                 ", " + vehicleListing.getVehicleDealer().getState());
         exteriorColorTextView.setText(vehicleListing.getExteriorColor());

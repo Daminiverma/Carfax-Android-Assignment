@@ -7,17 +7,19 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.example.dam.carfaxassignment.Models.VehicleListing;
 import com.example.dam.carfaxassignment.R;
 import com.squareup.picasso.Picasso;
-import java.util.ArrayList;
+
+import java.util.List;
 
 public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfoRecyclerViewHolder> {
 
     Context context;
-    ArrayList<VehicleListing> vehicleListings = new ArrayList<>();
+    List<VehicleListing> vehicleListings;
 
-    public VehicleInfoRecyclerAdapter(ArrayList<VehicleListing> vehicleListing, Context context) {
+    public VehicleInfoRecyclerAdapter(List<VehicleListing> vehicleListing, Context context) {
         this.vehicleListings = vehicleListing;
         this.context = context;
     }
@@ -49,7 +51,7 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
             @Override
             public void onClick(View view) {
                 String number = vehicleInfoList.getVehicleDealer().getPhone();
-                ((HomeActivity)context).InitiateCall(number);
+                ((HomeActivity) context).InitiateCall(number);
             }
         });
     }
@@ -60,12 +62,12 @@ public class VehicleInfoRecyclerAdapter extends RecyclerView.Adapter<VehicleInfo
 
         String imageUrl = "https://www.carfax.com/uclassets/images/vdp-noimage.png";
         if (vehicleInfoList.getImages() != null) {
-            imageUrl = vehicleInfoList.getImages().getFirstPhoto().getLarge();
+            imageUrl = vehicleInfoList.getImages().getVehicleFirstPhoto().getLarge();
         }
 
         Picasso.get().load(imageUrl).into(holder.vehicleInfoImageView);
         holder.vehicleInfoPriceTextView.setText("$ " + vehicleInfoList.getCurrentPrice());
-        holder.vehicleInfoMilageTextView.setText(vehicleInfoList.getMilage().toString() + " mi");
+        holder.vehicleInfoMilageTextView.setText(vehicleInfoList.getMileage().toString() + " mi");
         holder.vehicleInfoLocationTextView.setText(vehicleInfoList.getVehicleDealer().getCity() + ", " + vehicleInfoList.getVehicleDealer().getState());
     }
 
